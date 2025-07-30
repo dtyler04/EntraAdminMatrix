@@ -31,7 +31,7 @@ Script contents will be displayed, so you can read over it.
 2. Go to Entra Admin Center and view a device's LAPS password
 3. Click the eye icon to show the password
 4. A barcode will automatically appear below the password
-5. Scan it with your phone or barcode scanner
+5. Scan it with your barcode scanner
 
 ## Security note
 
