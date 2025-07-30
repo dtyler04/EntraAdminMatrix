@@ -23,6 +23,7 @@
     const insertBarcodeIfVisible = () => {
         const passwordEl = document.querySelector('.ext-devices-hidden-value-text');
         const toggleEl = document.querySelector('.ext-devices-type-icon');
+        // this looks to see if the .ext-devices-hidden-value-text is hidden. If it is hidden it waits. 
 
         if (!passwordEl || !toggleEl) {
             setTimeout(insertBarcodeIfVisible, 500);
@@ -41,8 +42,9 @@
             const lineBreak = document.createElement('br');
             lineBreak.id = 'dm-br';
             passwordEl.parentNode.insertBefore(lineBreak, passwordEl.nextSibling);
-
-            const formattedText = `.\\Administrator\t${text}`;
+            // Passes through the .\Administrator (ignoring the first \).this just types in the: .\Administrator (the \\ indicates that the first \ isnt a com) 
+            // Then appends the {text} which is the contents of the .ext-devices-hidden-value-text HTML element.
+            const formattedText = `.\\Administrator\t${text}`; 
 
             const svgNode = DATAMatrix({
                 msg: formattedText,
