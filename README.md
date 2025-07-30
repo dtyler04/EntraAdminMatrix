@@ -10,14 +10,19 @@ Gnerates Data Matrix barcodes for LAPS passwords in Microsoft Entra Admin Center
 The barcode contains: `.\Administrator` + tab + `your_password`
 
 ## Installation
+You'll need a userscript manager like Tampermonkey or Greasemonkey installed in your browser first.
+### Edge
+
+https://microsoftedge.microsoft.com/addons/detail/iikmkjmpaadaobahmlepeloendndfphd
+
+### Chrome
+https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo
 
 **[Click here to install the userscript](https://github.com/dtyler04/EntraAdminMatrix/raw/main/datamatrix.user.js)**
 
-You'll need a userscript manager like Tampermonkey or Greasemonkey installed in your browser first.
-
 ## How to use
 
-1. Install the script
+1. Install the script (using the above link)
 2. Go to Entra Admin Center and view a device's LAPS password
 3. Click the eye icon to show the password
 4. A barcode will automatically appear below the password
