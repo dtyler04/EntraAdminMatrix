@@ -6,6 +6,7 @@ Gnerates Data Matrix barcodes for LAPS passwords in Microsoft Entra Admin Center
 - Detects when a password is visible (not hidden)
 - Creates a Data Matrix barcode containing the username and password
 - Displays it right below the password field
+- Security concers? See security note below
 
 The barcode contains: `.\Administrator` + tab + `your_password`
 
@@ -17,6 +18,10 @@ https://microsoftedge.microsoft.com/addons/detail/iikmkjmpaadaobahmlepeloendndfp
 
 ### Chrome
 https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo
+
+### Once installed, click the link below which will redirect to tampermonkey
+You will have to click approve and agree to add the script. 
+Script contents will be displayed, so you can read over it.
 
 **[Click here to install the userscript](https://github.com/dtyler04/EntraAdminMatrix/raw/main/datamatrix.user.js)**
 
