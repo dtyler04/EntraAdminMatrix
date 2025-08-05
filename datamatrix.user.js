@@ -5,10 +5,12 @@
 // @description  Show Data Matrix barcode for visible LAPS passwords in Entra (with spacing and only when visible).
 // @author       You
 // @match        https://entra.microsoft.com/*
-// @grant        none
+// @grant        GM_addStyle
 // @run-at       document-end
+// @sandbox      DOM
 // ==/UserScript==
 
+// the @grant metadata forces all scopes to be local. And the @sandbox forces disabled access to unsafewindow
 (function () {
     'use strict';
 
@@ -20,43 +22,85 @@
         }
     })();
 
-    const insertBarcodeIfVisible = () => {
-        const passwordEl = document.querySelector('.ext-devices-hidden-value-text');
-        const toggleEl = document.querySelector('.ext-devices-type-icon');
-        // this looks to see if the .ext-devices-hidden-value-text is hidden. If it is hidden it waits. 
+const insertBarcodeIfVisible = () => {
+    const passwordEl = document.querySelector('.ext-devices-hidden-value-text');
+    const toggleEl = document.querySelector('.ext-devices-type-icon');
 
-        if (!passwordEl || !toggleEl) {
-            setTimeout(insertBarcodeIfVisible, 500);
-            return;
-        }
+    if (!passwordEl || !toggleEl) {
+        setTimeout(insertBarcodeIfVisible, 500);
+        return;
+    }
 
-        const isVisible = toggleEl.getAttribute('title') === 'Hide';
-        const text = passwordEl.textContent.trim();
+    const isVisible = toggleEl.getAttribute('title') === 'Hide';
+    const text = passwordEl.textContent.trim();
 
-        if (
-            isVisible &&
-            text &&
-            text !== '********' &&
-            !document.getElementById('dm-svg')
-        ) {
-            const lineBreak = document.createElement('br');
-            lineBreak.id = 'dm-br';
-            passwordEl.parentNode.insertBefore(lineBreak, passwordEl.nextSibling);
-            // Passes through the .\Administrator (ignoring the first \).this just types in the: .\Administrator (the \\ indicates that the first \ isnt a com) 
-            // Then appends the {text} which is the contents of the .ext-devices-hidden-value-text HTML element.
-            const formattedText = `.\\Administrator\t${text}`; 
+    if (
+        isVisible &&
+        text &&
+        text !== '********' &&
+        !document.getElementById('dm-wrapper')
+    ) {
+        const wrapper = document.createElement('div');
+        wrapper.id = 'dm-wrapper';
+        wrapper.style.marginTop = '10px';
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'column';
+        wrapper.style.gap = '20px';
 
-            const svgNode = DATAMatrix({
-                msg: formattedText,
-                dim: 200,
-                pad: 2,
-                pal: ['#000', '#fff'],
-                vrb: 0
-            });
+        // === Formatted Barcode ===
+        const formattedContainer = document.createElement('div');
+        formattedContainer.style.textAlign = 'center';
 
-            svgNode.id = 'dm-svg';
-            lineBreak.parentNode.insertBefore(svgNode, lineBreak.nextSibling);
-        }
+        const formattedTitle = document.createElement('div');
+        formattedTitle.textContent = 'Formatted';
+        formattedTitle.style.fontWeight = 'bold';
+        formattedTitle.style.marginBottom = '5px';
+
+        const formattedText = `.\\Administrator\t${text}`;
+        // Then interpret "::" as a tab in your system, if needed
+        const formattedSvg = DATAMatrix({
+            msg: formattedText,
+            dim: 200, //size of the matrix
+            pad: 2,
+            pal: ['#000', '#fff'],
+            vrb: 0
+        });
+        formattedSvg.id = 'dm-svg-formatted';
+
+        formattedContainer.appendChild(formattedTitle);
+        formattedContainer.appendChild(formattedSvg);
+
+        // === Raw Barcode ===
+        const rawContainer = document.createElement('div');
+        rawContainer.style.textAlign = 'center';
+
+        const rawTitle = document.createElement('div');
+        rawTitle.textContent = 'Pwd Only';
+        rawTitle.style.fontWeight = 'bold';
+        rawTitle.style.marginBottom = '5px';
+
+        const rawSvg = DATAMatrix({
+            msg: text,
+            dim: 200,
+            pad: 2,
+            pal: ['#000', '#fff'],
+            vrb: 0
+        });
+        rawSvg.id = 'dm-svg-raw';
+
+        rawContainer.appendChild(rawTitle);
+        rawContainer.appendChild(rawSvg);
+
+        // === Assemble ===
+        wrapper.appendChild(formattedContainer);
+        wrapper.appendChild(rawContainer);
+
+        const lineBreak = document.createElement('br');
+        lineBreak.id = 'dm-br';
+
+        passwordEl.parentNode.insertBefore(lineBreak, passwordEl.nextSibling);
+        lineBreak.parentNode.insertBefore(wrapper, lineBreak.nextSibling);
+    }
     };
 
     // MutationObserver to re-run on dynamic changes
