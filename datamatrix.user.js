@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Entra LAPS Password Barcode
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      2.0
 // @description  Show Data Matrix barcode for visible LAPS passwords in Entra (with spacing and only when visible).
 // @author       You
 // @match        https://entra.microsoft.com/*
